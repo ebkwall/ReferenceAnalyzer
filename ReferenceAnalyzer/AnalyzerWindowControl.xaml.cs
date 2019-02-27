@@ -116,20 +116,6 @@
                             };
                             projectnode.Items.Add(brokenchild);
 
-                            /*
-                            var nofix = new TreeViewItem
-                            {
-                                Header = $"NO FIX WAS FOUND WITHIN THE SOLUTION",
-                                Foreground = System.Windows.Media.Brushes.IndianRed
-                            };
-
-                            //nofix.ForeColor = Color.Red;
-                            //nofix.NodeFont = new Font(tvwProposedFixes.Font, FontStyle.Bold);
-                            brokenchild.IsSelected= false;
-                            //nofix.Checked = false;
-                            brokenchild.Items.Add(nofix);
-                            */
-
                             hasbroken = true;
                             continue;
                         }
