@@ -1,0 +1,198 @@
+﻿<UserControl x:Class="ReferenceAnalyzerTool.AnalyzerWindowControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+             Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="600"
+             Name="MyToolWindow">
+
+    <Grid>
+        <Grid.Resources>
+            <!--
+            <Style x:Key="CheckListBox" TargetType="{x:Type ListBox}" >
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="ItemContainerStyle"
+            Value="{DynamicResource CheckBoxListBoxItem}" />
+            </Style>
+            <Style x:Key="CheckBoxListBoxItem" TargetType="{x:Type ListBoxItem}">
+
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                            <Grid Margin="0,0,0,0" >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="200" />
+                                    <ColumnDefinition Width="2" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <CheckBox IsChecked="{Binding Path=UseIt, Mode=TwoWay}" Padding="0,0,0,0" Margin="0,0,0,0"/>
+                                <Label Grid.Column="1" Content="{Binding Name}" Foreground="Wheat" Padding="0,4,0,0" Margin="0,0,0,0" />
+                                <GridSplitter Grid.Column="2" Width="2" HorizontalAlignment="Stretch" Foreground="{x:Null}"/>
+                                <Label Grid.Column="3" Content="{Binding Path}" Foreground="Wheat" Padding="4,0,0,0" Margin="0,0,0,0"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            -->
+            <Style x:Key="GridViewColumnHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                            <Border BorderThickness="0,0,0,1" BorderBrush="DarkGray" Background="Transparent">
+                                <TextBlock x:Name="ContentHeader" Text="{TemplateBinding Content}" 
+                                           Padding="5,5,5,0" Width="{TemplateBinding Width}" TextAlignment="Center" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                
+                <Setter Property="OverridesDefaultStyle" Value="False" />
+                <Setter Property="Foreground" Value="DarkCyan" />
+                <Setter Property="FontFamily" Value="Segoe UI" />
+                <Setter Property="FontSize" Value="18" />
+            </Style>
+        </Grid.Resources>
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <ToolBar x:Name="toolBar" Height="32" Foreground="Wheat" BorderBrush="Yellow" Background="{x:Null}">
+                <Label Content="Reference Analyzer" Height="27" VerticalAlignment="Center" Foreground="Wheat"/>
+                <Separator Height="27" Margin="0" VerticalAlignment="Center" Width="10" Background="{x:Null}"/>
+                <Button Name="btnScan" Content="Scan It" VerticalAlignment="Center" Foreground="Wheat" Click="btnScanIt_Click" />
+                <Separator Height="27" Margin="0" VerticalAlignment="Center" Width="10" Background="{x:Null}"/>
+                <Button Name="btnFix" Content="Fix It!"  VerticalAlignment="Center" Foreground="Wheat" Click="btnFixIt_Click" />
+                <Separator Height="27" Margin="0" VerticalAlignment="Center" Width="10"  Background="{x:Null}"/>
+                <Label Content="Preferred Type" Foreground="Wheat" Height="27" VerticalAlignment="Center" />
+                <ComboBox Name="cboPerferedType" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" Foreground="White" Background="{x:Null}" SelectedIndex="0" BorderBrush="Transparent" >
+                    <ComboBoxItem Content="Project" HorizontalAlignment="Left" Width="75" Foreground="Wheat" Background="{x:Null}" />
+                    <ComboBoxItem Content="File" HorizontalAlignment="Left" Width="75" Foreground="Wheat" Background="{x:Null}"/>
+                </ComboBox>
+                <CheckBox x:Name="chkScope"  Content="Search Solution for References" IsChecked="true" Foreground="Wheat"/>
+                <Label x:Name="lblSelectedType" Content="Solution" Foreground="Wheat" Height="27" VerticalAlignment="Top"/>
+                <Label x:Name="lblSelectedItem" Content="Name" Foreground="Wheat" Height="27" VerticalAlignment="Top"/>
+            </ToolBar>
+
+            
+            <Grid Grid.Row="1" Name="MainVerticalSplitGrid">
+                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="8" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Name="LeftHorizontalGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="180" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Foreground="DarkCyan" FontSize="24" FontFamily="Segoe UI" HorizontalAlignment="Center">Available Project References</Label>
+                    <ListView  Grid.Row="1" Name="lvProjectReferences" SelectionMode="Single"  BorderBrush="Transparent" Background="Transparent">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <!-- None of this is working! I can Disable them, but that has undesired affects -->                                
+                                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                <Setter Property="IsSelected" Value="False" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <!--<GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle}" >-->
+                            <GridView>
+                                <GridViewColumn >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Margin="0" Padding="0" IsChecked="{Binding UseIt}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" Header="Project" >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Margin="0" Padding="0" Content="{Binding Name}"  Foreground="Wheat" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="Auto" Header="Output Path" >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Margin="0" Padding="0" Content="{Binding Path}" Foreground="Wheat" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <GridSplitter Grid.Row="2" Height="8" HorizontalAlignment="Stretch" Foreground="Transparent" Background="Transparent"/>
+
+                    <Label Grid.Row="3" Foreground="DarkCyan" FontSize="24" FontFamily="Segoe UI" HorizontalAlignment="Center">Available File References</Label>
+                    <ListView Grid.Row="4" Name="lvFileReferences" BorderBrush="Transparent" Foreground="White" Background="Transparent">
+                        <ListView.View>
+                            <!--<GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle}" >-->
+                            <GridView>
+                                <GridViewColumn>                                    
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Margin="0" Padding="0" IsChecked="{Binding UseIt}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100" Header="File" >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Margin="0" Padding="0" Content="{Binding Name}"  Foreground="Wheat" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="Auto" Header="Reference Path"  >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Label Margin="0" Padding="0" Content="{Binding Path}" Foreground="Wheat" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+
+                <GridSplitter Grid.Column="1" Width="8" HorizontalAlignment="Stretch" Foreground="Transparent" Background="Transparent"/>
+                
+                <Grid Grid.Column="2" Name="RightHorizontalGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="220" />
+                        <RowDefinition Height="8" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Label Grid.Row="0" Foreground="DarkCyan" FontSize="24" FontFamily="Segoe UI" HorizontalAlignment="Center">Proposed Reference Changes</Label>
+                    <TreeView Grid.Row="1" Name="tvwProposedFixes" BorderBrush="Transparent" Foreground="White" Background="Transparent">
+                    </TreeView>
+
+                    <GridSplitter Grid.Row="2" Height="8" HorizontalAlignment="Stretch" Foreground="Transparent" Background="Transparent"/>
+
+                    <Label Grid.Row="3" Foreground="DarkCyan" FontSize="24" FontFamily="Segoe UI" HorizontalAlignment="Center">MISSING REFERENCES</Label>
+                    <ListBox Grid.Row="4" Name="lvMissingReferences" BorderBrush="Transparent" Background="Transparent"
+                             Foreground="IndianRed" ItemsSource="{Binding MissingReferences}"
+                             Padding="0,0,0,0" Margin="0,0,0,0" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
