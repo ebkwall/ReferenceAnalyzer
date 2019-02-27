@@ -73,14 +73,11 @@
                 <Button Name="btnFix" Content="Fix It!"  VerticalAlignment="Center" Foreground="Wheat" Click="btnFixIt_Click" />
                 <Separator Height="27" Margin="0" VerticalAlignment="Center" Width="10"  Background="{x:Null}"/>
                 <Label Content="Preferred Type" Foreground="Wheat" Height="27" VerticalAlignment="Center" />
-                <Separator Height="27" Margin="0" VerticalAlignment="Center" Width="10"  Background="{x:Null}"/>
                 <ComboBox Name="cboPerferedType" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" Foreground="White" Background="{x:Null}" SelectedIndex="0" BorderBrush="Transparent" >
                     <ComboBoxItem Content="Project" HorizontalAlignment="Left" Width="75" Foreground="Wheat" Background="{x:Null}" />
                     <ComboBoxItem Content="File" HorizontalAlignment="Left" Width="75" Foreground="Wheat" Background="{x:Null}"/>
                 </ComboBox>
-                <Separator Height="27" Margin="0" VerticalAlignment="Center" Width="10"  Background="{x:Null}"/>
                 <CheckBox x:Name="chkScope"  Content="Search Solution for References" IsChecked="true" Foreground="Wheat"/>
-                <Separator Height="27" Margin="0" VerticalAlignment="Center" Width="10"  Background="{x:Null}"/>
                 <Label x:Name="lblSelectedType" Content="Solution" Foreground="Wheat" Height="27" VerticalAlignment="Top"/>
                 <Label x:Name="lblSelectedItem" Content="Name" Foreground="Wheat" Height="27" VerticalAlignment="Top"/>
             </ToolBar>
