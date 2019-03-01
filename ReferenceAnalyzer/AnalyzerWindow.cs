@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Runtime.InteropServices;
     using Microsoft.VisualStudio.Shell;
+    using static ReferenceAnalyzerTool.ReferenceAnalyzerWorker;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
@@ -19,45 +20,42 @@
     [Guid("6aa84643-b8de-4227-b2ca-efe71b2bccfa")]
     public class AnalyzerWindow : ToolWindowPane
     {
-        private AnalyzerWindowControl _awc;
-
-        public ReferenceAnalyzer Analyzer { set { _awc.Analyzer = value; } }
         public List<AnalyzerWindowControl.ReferenceView> ProjectReferences
         {
             set
             {
-                _awc.ProjectReferences = value;
+                ((AnalyzerWindowControl)Content).ProjectReferences = value;
             }
         }
         public List<AnalyzerWindowControl.ReferenceView> FileReferences
         {
             set
             {
-                _awc.FileReferences = value;
+                ((AnalyzerWindowControl)Content).FileReferences = value;
             }
         }
-        
+
         public List<string> MissingReferences
         {
             set
             {
-                _awc.MissingReferences = value;
+                ((AnalyzerWindowControl)Content).MissingReferences = value;
             }
         }
 
-        public Dictionary<string, ReferenceAnalyzer.ProjectFixDefinition> ProposedFixes
+        public Dictionary<string, ProjectFixDefinition> ProposedFixes
         {
             set
             {
-                _awc.ProposedFixes = value;
+                ((AnalyzerWindowControl)Content).ProposedFixes = value;
             }
         }
 
-        public ReferenceAnalyzer.SelectedType SelectedType
+        public SelectedType SelectedType
         {
             set
             {
-                _awc.SelectedType = value;
+                ((AnalyzerWindowControl)Content).SelectedType = value;
             }
         }
 
@@ -65,11 +63,9 @@
         {
             set
             {
-                _awc.SelectedNode = value;
+                ((AnalyzerWindowControl)Content).SelectedNode = value;
             }
         }
-
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AnalyzerWindow"/> class.
@@ -82,7 +78,6 @@
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
             this.Content = new AnalyzerWindowControl();
-            _awc = (AnalyzerWindowControl)this.Content;
         }
     }
 }

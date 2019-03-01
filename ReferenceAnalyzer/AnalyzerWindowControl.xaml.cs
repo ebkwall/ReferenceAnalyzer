@@ -1,23 +1,18 @@
 ﻿namespace ReferenceAnalyzerTool
 {
+    using Microsoft.VisualStudio.Shell;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Drawing;
     using System.Windows;
     using System.Windows.Controls;
     using VSLangProj;
+    using static ReferenceAnalyzerTool.ReferenceAnalyzerWorker;
 
     /// <summary>
     /// Interaction logic for AnalyzerWindowControl.
     /// </summary>
     public partial class AnalyzerWindowControl : UserControl
     {
-        private ReferenceAnalyzer _analyzer;
-        public ReferenceAnalyzer Analyzer { set { _analyzer = value; } }
-
-
         public class ReferenceView
         {
             public bool UseIt { get; set; }
@@ -25,7 +20,7 @@
             public string Path { get; set; }
         }
 
-        public ReferenceAnalyzer.SelectedType SelectedType
+        public SelectedType SelectedType
         {
             set
             {
@@ -62,7 +57,7 @@
         {
             set
             {
-                // This doesnt have actual databinding
+                // This doesn't have actual data binding
                 // need old fashion grease
                 lvMissingReferences.Items.Clear();
                 foreach (var item in value)
@@ -72,14 +67,16 @@
  }
         }
 
-        public Dictionary<string, ReferenceAnalyzer.ProjectFixDefinition> ProposedFixes
+        public Dictionary<string, ProjectFixDefinition> ProposedFixes
         {
             set
             {
                 tvwProposedFixes.Items.Clear();
-                var root = new TreeViewItem();
-                root.Header = _selectedNode;
-                root.Foreground = System.Windows.Media.Brushes.Wheat;
+                var root = new TreeViewItem
+                {
+                    Header = _selectedNode,
+                    Foreground = System.Windows.Media.Brushes.Wheat
+                };
                 tvwProposedFixes.Items.Add(root);
 
                 foreach (var item in value)
@@ -96,18 +93,18 @@
                     foreach (var fix in item.Value.FixDefinitions)
                     {
                         string name = string.Empty;
-                        if (fix.orgType == ReferenceAnalyzer.FixDefinition.OrgType.File)
+                        if (fix.orgType == FixDefinition.OrgType.File)
                             name = ((Reference)fix.orgReference).Path;
                         if (name == string.Empty)
                             name = ((Reference)fix.orgReference).Name;
 
                         string newname = string.Empty;
-                        if (fix.newType == ReferenceAnalyzer.FixDefinition.NewType.Project)
+                        if (fix.newType == FixDefinition.NewType.Project)
                             newname = ((VSProject)fix.newReference).Project.Name;
-                        else if (fix.newType == ReferenceAnalyzer.FixDefinition.NewType.File)
+                        else if (fix.newType == FixDefinition.NewType.File)
                             newname = (string)fix.newReference;
 
-                        else if (fix.newType == ReferenceAnalyzer.FixDefinition.NewType.NoneFound)
+                        else if (fix.newType == FixDefinition.NewType.NoneFound)
                         {
                             var brokenchild = new TreeViewItem
                             {
@@ -116,31 +113,21 @@
                             };
                             projectnode.Items.Add(brokenchild);
 
-                            /*
-                            var nofix = new TreeViewItem
-                            {
-                                Header = $"NO FIX WAS FOUND WITHIN THE SOLUTION",
-                                Foreground = System.Windows.Media.Brushes.IndianRed
-                            };
-
-                            //nofix.ForeColor = Color.Red;
-                            //nofix.NodeFont = new Font(tvwProposedFixes.Font, FontStyle.Bold);
-                            brokenchild.IsSelected= false;
-                            //nofix.Checked = false;
-                            brokenchild.Items.Add(nofix);
-                            */
-
                             hasbroken = true;
                             continue;
                         }
-                        var child = new TreeViewItem();
-                        child.Header = $"{fix.orgType.ToString()} Reference | {name}";
-                        child.Foreground = System.Windows.Media.Brushes.Wheat;
+                        var child = new TreeViewItem
+                        {
+                            Header = $"{fix.orgType.ToString()} Reference | {name}",
+                            Foreground = System.Windows.Media.Brushes.Wheat
+                        };
                         projectnode.Items.Add(child);
 
-                        var fixchild = new TreeViewItem();
-                        fixchild.Header = $"Replace with {fix.newType.ToString()} Reference | {newname}";
-                        fixchild.Foreground = System.Windows.Media.Brushes.Wheat;
+                        var fixchild = new TreeViewItem
+                        {
+                            Header = $"Replace with {fix.newType.ToString()} Reference | {newname}",
+                            Foreground = System.Windows.Media.Brushes.Wheat
+                        };
                         child.Items.Add(fixchild);
                         child.IsSelected = true;
                         fixchild.IsSelected = true;
@@ -149,9 +136,11 @@
                         if (fix.altReference != null)
                         {
                             newname = fix.altReference.ToString();
-                            var altfix = new TreeViewItem();
-                            altfix.Header = $"Alternate {fix.altType.ToString()} Reference | {newname}";
-                            altfix.Foreground = System.Windows.Media.Brushes.Wheat;
+                            var altfix = new TreeViewItem
+                            {
+                                Header = $"Alternate {fix.altType.ToString()} Reference | {newname}",
+                                Foreground = System.Windows.Media.Brushes.Wheat
+                            };
                             child.Items.Add(altfix);
                             altfix.IsSelected = false;
                         }
@@ -171,7 +160,7 @@
                         projectnode.Foreground = System.Windows.Media.Brushes.IndianRed;
                     }
                 }
-                root.IsExpanded = true;
+                root.ExpandSubtree();
 
             }
         }
@@ -195,13 +184,23 @@
             this.InitializeComponent();
         }
 
-        private void btnScanIt_Click(object sender, RoutedEventArgs e)
+        public void btnScanIt_Click(object sender, RoutedEventArgs e)
         {
-            _analyzer.Execute(sender, e);
+            Common.Worker.Execute();
         }
-        private void btnFixIt_Click(object sender, RoutedEventArgs e)
+        public void btnFixIt_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        public void CboPerferedType_DropDownOpened(object sender, System.EventArgs e)
+        {
+            cboPerferedType.Background = System.Windows.Media.Brushes.Black;
+        }
+
+        public void CboPerferedType_DropDownClosed(object sender, System.EventArgs e)
+        {
+            cboPerferedType.Background = System.Windows.Media.Brushes.Transparent;
         }
     }
 }

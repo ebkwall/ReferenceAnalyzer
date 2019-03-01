@@ -7,11 +7,12 @@
              Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
              mc:Ignorable="d"
-             d:DesignHeight="400" d:DesignWidth="600"
+             d:DesignHeight="600" d:DesignWidth="800"
              Name="MyToolWindow">
 
     <Grid>
         <Grid.Resources>
+            
             <!--
             <Style x:Key="CheckListBox" TargetType="{x:Type ListBox}" >
                 <Setter Property="Margin" Value="5" />
@@ -39,7 +40,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            -->
+
             <Style x:Key="GridViewColumnHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
                 <Setter Property="Template">
                     <Setter.Value>
@@ -57,6 +58,8 @@
                 <Setter Property="FontFamily" Value="Segoe UI" />
                 <Setter Property="FontSize" Value="18" />
             </Style>
+            -->
+            
         </Grid.Resources>
         
         <Grid>
@@ -65,21 +68,18 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <ToolBar x:Name="toolBar" Height="32" Foreground="Wheat" BorderBrush="Yellow" Background="{x:Null}">
-                <Label Content="Reference Analyzer" Height="27" VerticalAlignment="Center" Foreground="Wheat"/>
-                <Separator Height="27" Margin="0" VerticalAlignment="Center" Width="10" Background="{x:Null}"/>
-                <Button Name="btnScan" Content="Scan It" VerticalAlignment="Center" Foreground="Wheat" Click="btnScanIt_Click" />
-                <Separator Height="27" Margin="0" VerticalAlignment="Center" Width="10" Background="{x:Null}"/>
-                <Button Name="btnFix" Content="Fix It!"  VerticalAlignment="Center" Foreground="Wheat" Click="btnFixIt_Click" />
-                <Separator Height="27" Margin="0" VerticalAlignment="Center" Width="10"  Background="{x:Null}"/>
-                <Label Content="Preferred Type" Foreground="Wheat" Height="27" VerticalAlignment="Center" />
-                <ComboBox Name="cboPerferedType" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" Foreground="White" Background="{x:Null}" SelectedIndex="0" BorderBrush="Transparent" >
+            <ToolBar x:Name="toolBar" Height="32" FontSize="14" Foreground="Wheat" BorderBrush="Yellow" Background="{x:Null}">
+                <Label Content="Reference Analyzer" Margin="5,0,5,0" VerticalAlignment="Center" Foreground="Wheat" />
+                <Button Name="btnScan" Content="Scan It" Margin="5,0,5,0" VerticalAlignment="Center" Foreground="Wheat" Click="btnScanIt_Click" />
+                <Button Name="btnFix" Content="Fix It!" Margin="5,0,5,0" VerticalAlignment="Center" Foreground="Wheat" Click="btnFixIt_Click" />
+                <Label Content="Preferred Type" Foreground="Wheat" Margin="5,0,5,0" VerticalAlignment="Center" />
+                <ComboBox Name="cboPerferedType" HorizontalAlignment="Left" Margin="5,0,5,0" VerticalAlignment="Center" Width="75" Foreground="White" Background="{x:Null}" SelectedIndex="0" DropDownOpened="CboPerferedType_DropDownOpened" DropDownClosed="CboPerferedType_DropDownClosed" BorderBrush="Wheat" BorderThickness="1">
                     <ComboBoxItem Content="Project" HorizontalAlignment="Left" Width="75" Foreground="Wheat" Background="{x:Null}" />
                     <ComboBoxItem Content="File" HorizontalAlignment="Left" Width="75" Foreground="Wheat" Background="{x:Null}"/>
                 </ComboBox>
-                <CheckBox x:Name="chkScope"  Content="Search Solution for References" IsChecked="true" Foreground="Wheat"/>
-                <Label x:Name="lblSelectedType" Content="Solution" Foreground="Wheat" Height="27" VerticalAlignment="Top"/>
-                <Label x:Name="lblSelectedItem" Content="Name" Foreground="Wheat" Height="27" VerticalAlignment="Top"/>
+                <CheckBox x:Name="chkScope" Content="Search Solution for References" IsChecked="true" Margin="5,0,5,0" Foreground="Wheat"/>
+                <Label x:Name="lblSelectedType" Content="Solution" Foreground="White" VerticalAlignment="Center" Margin="0" />
+                <Label x:Name="lblSelectedItem" Content="Name" Foreground="White" VerticalAlignment="Center"/>
             </ToolBar>
 
             
@@ -94,13 +94,14 @@
                 <Grid Name="LeftHorizontalGrid">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="180" />
+                        <RowDefinition Height="240" />
                         <RowDefinition Height="8" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Row="0" Foreground="DarkCyan" FontSize="24" FontFamily="Segoe UI" HorizontalAlignment="Center">Available Project References</Label>
+                    <Label Grid.Row="0" Foreground="LightSkyBlue" FontSize="28" FontFamily="Calibri Light" HorizontalAlignment="Center">
+                        Available Project References</Label>
                     <ListView  Grid.Row="1" Name="lvProjectReferences" SelectionMode="Single"  BorderBrush="Transparent" Background="Transparent">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
@@ -139,7 +140,9 @@
 
                     <GridSplitter Grid.Row="2" Height="8" HorizontalAlignment="Stretch" Foreground="Transparent" Background="Transparent"/>
 
-                    <Label Grid.Row="3" Foreground="DarkCyan" FontSize="24" FontFamily="Segoe UI" HorizontalAlignment="Center">Available File References</Label>
+                    <Label Grid.Row="3" Foreground="LightSkyBlue" FontSize="28" FontFamily="Calibri Light" HorizontalAlignment="Center">
+                        Available File References</Label>
+                    
                     <ListView Grid.Row="4" Name="lvFileReferences" BorderBrush="Transparent" Foreground="White" Background="Transparent">
                         <ListView.View>
                             <!--<GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle}" >-->
@@ -175,19 +178,20 @@
                 <Grid Grid.Column="2" Name="RightHorizontalGrid">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="220" />
+                        <RowDefinition Height="300" />
                         <RowDefinition Height="8" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Row="0" Foreground="DarkCyan" FontSize="24" FontFamily="Segoe UI" HorizontalAlignment="Center">Proposed Reference Changes</Label>
-                    <TreeView Grid.Row="1" Name="tvwProposedFixes" BorderBrush="Transparent" Foreground="White" Background="Transparent">
-                    </TreeView>
+                    <Label Grid.Row="0" Foreground="LightSkyBlue" FontSize="28" FontFamily="Calibri Light" HorizontalAlignment="Center">
+                        Proposed Reference Changes</Label>
+                    <TreeView Grid.Row="1" Name="tvwProposedFixes" BorderBrush="Transparent" Foreground="White" Background="Transparent"/>
 
                     <GridSplitter Grid.Row="2" Height="8" HorizontalAlignment="Stretch" Foreground="Transparent" Background="Transparent"/>
 
-                    <Label Grid.Row="3" Foreground="DarkCyan" FontSize="24" FontFamily="Segoe UI" HorizontalAlignment="Center">MISSING REFERENCES</Label>
+                    <Label Grid.Row="3" Foreground="LightSkyBlue" FontSize="28" FontFamily="Calibri Light" HorizontalAlignment="Center">
+                        MISSING REFERENCES</Label>
                     <ListBox Grid.Row="4" Name="lvMissingReferences" BorderBrush="Transparent" Background="Transparent"
                              Foreground="IndianRed" ItemsSource="{Binding MissingReferences}"
                              Padding="0,0,0,0" Margin="0,0,0,0" />
