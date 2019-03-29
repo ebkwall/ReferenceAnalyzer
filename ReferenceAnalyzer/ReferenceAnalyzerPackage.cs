@@ -30,7 +30,7 @@ namespace ReferenceAnalyzerTool
     [Guid(ReferenceAnalyzerPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", 
         Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    [ProvideToolWindow(typeof(AnalyzerWindow))]
+    [ProvideToolWindow(typeof(AnalyzerWindow), MultiInstances = false, Style = VsDockStyle.Tabbed)] //, Window =EnvDTE.Constants.vsWindowKindMainWindow)]
     public sealed class ReferenceAnalyzerPackage : AsyncPackage
     {
         /// <summary>
@@ -63,8 +63,9 @@ namespace ReferenceAnalyzerTool
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-            await ReferenceAnalyzer.InitializeAsync(this);
+            await ReferenceAnalyzerCommand.InitializeAsync(this);
             await AnalyzerWindowCommand.InitializeAsync(this);
+ 
         }
 
         #endregion

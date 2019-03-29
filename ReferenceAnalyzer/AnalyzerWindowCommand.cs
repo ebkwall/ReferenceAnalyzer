@@ -53,13 +53,17 @@ namespace ReferenceAnalyzerTool
                 throw new NotSupportedException("Cannot create tool window");
             }
 
-            if (Common.Worker == null)
-            {
-                // Create the worker class they will both use.
-                Common.Worker = new ReferenceAnalyzerWorker((AnalyzerWindow)window, ServiceProvider);
-            }
-
             _windowFrame = (IVsWindowFrame)window.Frame;
+            Common.analyzerWindow = window as AnalyzerWindow;
+            Common.ServiceProvider = ServiceProvider;
+
+
+            // Create the worker class they will both use.
+            Common.Worker = new ReferenceAnalyzer();
+
+            // Create the Solution Change Event Handler
+            Common.SolutionEventHandler = new SolutionChangeHandler();
+            
         }
 
         /// <summary>
@@ -94,6 +98,7 @@ namespace ReferenceAnalyzerTool
 
             OleMenuCommandService commandService = await package.GetServiceAsync((typeof(IMenuCommandService))) as OleMenuCommandService;
             Instance = new AnalyzerWindowCommand(package, commandService);
+
         }
 
         /// <summary>

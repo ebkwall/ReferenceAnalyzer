@@ -1,12 +1,11 @@
 ﻿namespace ReferenceAnalyzerTool
 {
-    using Microsoft.VisualStudio.Shell;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Windows;
     using System.Windows.Controls;
     using VSLangProj;
-    using static ReferenceAnalyzerTool.ReferenceAnalyzerWorker;
+    using static ReferenceAnalyzerTool.ReferenceAnalyzer;
 
     /// <summary>
     /// Interaction logic for AnalyzerWindowControl.
@@ -201,6 +200,11 @@
         public void CboPerferedType_DropDownClosed(object sender, System.EventArgs e)
         {
             cboPerferedType.Background = System.Windows.Media.Brushes.Transparent;
+        }
+
+        private void EventTrigger_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+
         }
     }
 }

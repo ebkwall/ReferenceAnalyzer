@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Runtime.InteropServices;
     using Microsoft.VisualStudio.Shell;
-    using static ReferenceAnalyzerTool.ReferenceAnalyzerWorker;
+    using static ReferenceAnalyzerTool.ReferenceAnalyzer;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
@@ -78,6 +78,22 @@
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
             this.Content = new AnalyzerWindowControl();
+        }
+
+        public override void OnToolWindowCreated()
+        {
+            base.OnToolWindowCreated();
+
+            var win = this.Content as AnalyzerWindowControl;
+            // Not sure where i was going with this...
+        }
+
+        public AnalyzerWindowControl AWControl
+        {
+            get
+            { 
+                return (AnalyzerWindowControl)this.Content;
+            }
         }
     }
 }

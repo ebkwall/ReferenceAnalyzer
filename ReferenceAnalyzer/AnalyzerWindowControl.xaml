@@ -7,8 +7,8 @@
              Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
              mc:Ignorable="d"
-             d:DesignHeight="600" d:DesignWidth="800"
-             Name="MyToolWindow">
+             d:DesignHeight="600" d:DesignWidth="900"
+             Name="ReferenceAnalyzerToolWindow" >
 
     <Grid>
         <Grid.Resources>
@@ -86,115 +86,133 @@
             <Grid Grid.Row="1" Name="MainVerticalSplitGrid">
                 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="1.5*" />
                     <ColumnDefinition Width="8" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <Grid Name="LeftHorizontalGrid">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="240" />
+                        <RowDefinition Height="1.8*" />
                         <RowDefinition Height="8" />
-                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Foreground="LightSkyBlue" FontSize="28" FontFamily="Calibri Light" HorizontalAlignment="Center">
+                            Available Project References</Label>
+                        <ListView  Grid.Row="1" Name="lvProjectReferences" SelectionMode="Single"  BorderBrush="Transparent" Background="Transparent">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <!-- None of this is working! I can Disable them, but that has undesired affects -->
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                    <Setter Property="IsSelected" Value="False" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.View>
+                                <!--<GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle}" >-->
+                                <GridView>
+                                    <GridViewColumn >
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox Margin="0" Padding="0" IsChecked="{Binding UseIt}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="100" Header="Project" >
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Label Margin="0" Padding="0" Content="{Binding Name}"  Foreground="Wheat" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="Auto" Header="Output Path" >
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Label Margin="0" Padding="0" Content="{Binding Path}" Foreground="Wheat" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
 
-                    <Label Grid.Row="0" Foreground="LightSkyBlue" FontSize="28" FontFamily="Calibri Light" HorizontalAlignment="Center">
-                        Available Project References</Label>
-                    <ListView  Grid.Row="1" Name="lvProjectReferences" SelectionMode="Single"  BorderBrush="Transparent" Background="Transparent">
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <!-- None of this is working! I can Disable them, but that has undesired affects -->                                
-                                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                                <Setter Property="IsSelected" Value="False" />
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                        <ListView.View>
-                            <!--<GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle}" >-->
-                            <GridView>
-                                <GridViewColumn >
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <CheckBox Margin="0" Padding="0" IsChecked="{Binding UseIt}" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Width="100" Header="Project" >
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Label Margin="0" Padding="0" Content="{Binding Name}"  Foreground="Wheat" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Width="Auto" Header="Output Path" >
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Label Margin="0" Padding="0" Content="{Binding Path}" Foreground="Wheat" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                    <GridSplitter Grid.Row="1" Height="2" HorizontalAlignment="Stretch" Background="DodgerBlue"/>
 
-                    <GridSplitter Grid.Row="2" Height="8" HorizontalAlignment="Stretch" Foreground="Transparent" Background="Transparent"/>
+                    <Grid Grid.Row="2" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Foreground="LightSkyBlue" FontSize="28" FontFamily="Calibri Light" HorizontalAlignment="Center">
+                            Available File References</Label>
 
-                    <Label Grid.Row="3" Foreground="LightSkyBlue" FontSize="28" FontFamily="Calibri Light" HorizontalAlignment="Center">
-                        Available File References</Label>
-                    
-                    <ListView Grid.Row="4" Name="lvFileReferences" BorderBrush="Transparent" Foreground="White" Background="Transparent">
-                        <ListView.View>
-                            <!--<GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle}" >-->
-                            <GridView>
-                                <GridViewColumn>                                    
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <CheckBox Margin="0" Padding="0" IsChecked="{Binding UseIt}" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Width="100" Header="File" >
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Label Margin="0" Padding="0" Content="{Binding Name}"  Foreground="Wheat" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Width="Auto" Header="Reference Path"  >
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Label Margin="0" Padding="0" Content="{Binding Path}" Foreground="Wheat" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                        <ListView Grid.Row="1" Name="lvFileReferences" BorderBrush="Transparent" Foreground="White" Background="Transparent">
+                            <ListView.View>
+                                <!--<GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle}" >-->
+                                <GridView>
+                                    <GridViewColumn>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <CheckBox Margin="0" Padding="0" IsChecked="{Binding UseIt}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="100" Header="File" >
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Label Margin="0" Padding="0" Content="{Binding Name}"  Foreground="Wheat" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="Auto" Header="Reference Path"  >
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Label Margin="0" Padding="0" Content="{Binding Path}" Foreground="Wheat" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
                 </Grid>
 
-                <GridSplitter Grid.Column="1" Width="8" HorizontalAlignment="Stretch" Foreground="Transparent" Background="Transparent"/>
+                <GridSplitter Grid.Column="1" Width="2" HorizontalAlignment="Stretch" Background="DodgerBlue"/>
                 
                 <Grid Grid.Column="2" Name="RightHorizontalGrid">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="300" />
+                        <RowDefinition Height="3*" />
                         <RowDefinition Height="8" />
-                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Foreground="LightSkyBlue" FontSize="28" FontFamily="Calibri Light" HorizontalAlignment="Center">
+                            Proposed Reference Changes</Label>
+                        <TreeView Grid.Row="1" Name="tvwProposedFixes" BorderBrush="Transparent" Foreground="White" Background="Transparent"/>
+                    </Grid>
+                    
+                    <GridSplitter Grid.Row="1" Height="2" HorizontalAlignment="Stretch" Background="DodgerBlue"/>
 
-                    <Label Grid.Row="0" Foreground="LightSkyBlue" FontSize="28" FontFamily="Calibri Light" HorizontalAlignment="Center">
-                        Proposed Reference Changes</Label>
-                    <TreeView Grid.Row="1" Name="tvwProposedFixes" BorderBrush="Transparent" Foreground="White" Background="Transparent"/>
-
-                    <GridSplitter Grid.Row="2" Height="8" HorizontalAlignment="Stretch" Foreground="Transparent" Background="Transparent"/>
-
-                    <Label Grid.Row="3" Foreground="LightSkyBlue" FontSize="28" FontFamily="Calibri Light" HorizontalAlignment="Center">
-                        MISSING REFERENCES</Label>
-                    <ListBox Grid.Row="4" Name="lvMissingReferences" BorderBrush="Transparent" Background="Transparent"
+                    <Grid Grid.Row="2" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Foreground="LightSkyBlue" FontSize="28" FontFamily="Calibri Light" HorizontalAlignment="Center">
+                            MISSING REFERENCES</Label>
+                        <ListBox Grid.Row="1" Name="lvMissingReferences" BorderBrush="Transparent" Background="Transparent"
                              Foreground="IndianRed" ItemsSource="{Binding MissingReferences}"
                              Padding="0,0,0,0" Margin="0,0,0,0" />
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid>
